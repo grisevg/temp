@@ -8,7 +8,7 @@ const Sprite = PIXI.Sprite;
 // Avaliable everywhere
 const renderer = PIXI.autoDetectRenderer(
   144, 256,
-  { resolution: 3, antialias: true },
+  { resolution: 4, antialias: true },
 );
 renderer.autoResize = true;
 
@@ -28,12 +28,13 @@ let gameOver;
 let pipes;
 
 const birdAnimationStates = [
-  'yellow-bird-1.png',
+  'face1.png',
+  //'yellow-bird-1.png',
   'yellow-bird-2.png',
   'yellow-bird-3.png',
   'yellow-bird-2.png',
 ];
-
+/*
 const birdAnimationStatesIterator = {
   animationState: -1,
   [Symbol.iterator]() { return this; },
@@ -52,7 +53,7 @@ const birdAnimationStatesIterator = {
     return { value: birdAnimationStates[this.animationState], done: false };
   },
 };
-
+*/
 // Constants
 const OPEN_SPACE_HEIGHT = 201;
 const MAX_ROTATION = Math.PI / 2 - 0.2;
@@ -151,7 +152,7 @@ const animatePipes = (speed) => {
 
 const animateBirdWings = () => {
   // Make the wings flap
-  bird.texture = id[birdAnimationStatesIterator.next().value].texture;
+  //bird.texture = id[birdAnimationStatesIterator.next().value].texture;
 };
 
 const animateBirdStatic = () => {
@@ -392,7 +393,7 @@ const reset = () => {
 const init = () => {
   gameTime = 0;
   isDay = true;
-  birdAnimationStatesIterator.animationState = -1;
+  //birdAnimationStatesIterator.animationState = -1;
   PIPE_SEPARATION = renderer.width * 1;
   gameSpeed = 1;
   currentGapSize = 70;
@@ -417,6 +418,7 @@ const init = () => {
 
   // Adds bird
   bird = new Sprite(id[birdAnimationStates[0]].texture);
+  bird.scale.x = bird.scale.y = 0.05;
   bird.y = (OPEN_SPACE_HEIGHT / 2) - (bird.height / 2) + 10;
   bird.x = (stage.width / 2) - (40);
   bird.pivot.set(bird.width / 2, bird.height / 2);
@@ -469,4 +471,6 @@ loader
   .add('yellow-bird-1.png', 'public/images/yellow-bird-1.png')
   .add('yellow-bird-2.png', 'public/images/yellow-bird-2.png')
   .add('yellow-bird-3.png', 'public/images/yellow-bird-3.png')
+  .add('face1.png', 'public/images/face1.png')
+  .add('face2.png', 'public/images/face2.png')
   .load(init);
