@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "connect": "^3.6.6",
+    "pixi.js": "^4.5.1",
+    "server-static": "^2.0.5"
+  }
+}
