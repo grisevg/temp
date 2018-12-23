@@ -338,12 +338,16 @@ const preLost = () => {
   gameOver.y = (renderer.height / 8) - 60;
   stage.addChild(gameOver);
 
-  document.addEventListener('keypress', function handler(event) {
-    if (event.which === 32) {
-      document.removeEventListener('keypress', handler);
+  let foo = () => {
+    if (event.which === 32 || event.which == 1) {
+      document.removeEventListener('keypress', foo);
+      renderer.view.removeEventListener('pointerdown', foo);
       reset();
     }
-  });
+  } 
+
+  renderer.view.addEventListener('pointerdown', foo);
+  document.addEventListener('keypress', foo);
 
   state = lost;
 };
