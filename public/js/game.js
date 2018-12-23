@@ -38,7 +38,7 @@ const birdAnimationStatesIterator = {
   [Symbol.iterator]() { return this; },
 
   next() {
-    if (bird.vy >= 2.5) {
+    if (bird.vy >= 1) {
       return { value: birdAnimationStates[1], done: false };
     } else {
       return { value: birdAnimationStates[0], done: false };
@@ -330,7 +330,7 @@ const preLost = () => {
   gameSpeed = 0;
 
   // Remove the fly click listener
-  renderer.view.removeEventListener('click', flyClickHandler);
+  renderer.view.removeEventListener('pointerdown', flyClickHandler);
   document.removeEventListener('keypress', flySpaceHandler);
 
   gameOver = new Sprite(id['game-over.png'].texture);
@@ -354,9 +354,9 @@ const preLost = () => {
 */
 const prePlaySetup = () => {
   // Waits for the player to click the play space to begin
-  renderer.view.addEventListener('click', function starter() {
+  renderer.view.addEventListener('pointerdown', function starter() {
     state = play;
-    renderer.view.removeEventListener('click', starter);
+    renderer.view.removeEventListener('pointerdown', starter);
   });
   document.addEventListener('keypress', function starter() {
     if (event.keyCode === 32) {
@@ -366,7 +366,7 @@ const prePlaySetup = () => {
   });
 
   // Add the listeners for flying action
-  renderer.view.addEventListener('click', flyClickHandler);
+  renderer.view.addEventListener('pointerdown', flyClickHandler);
   document.addEventListener('keypress', flySpaceHandler);
 
   state = prePlay;
