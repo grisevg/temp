@@ -51,7 +51,7 @@ const MAX_ROTATION = Math.PI / 2 - 0.2;
 const MIN_ROTATION = -Math.PI / 10;
 const DAY_LENGTH = 1000;
 
-let PIPE_SEPARATION = renderer.width * 1;
+let PIPE_SEPARATION = renderer.width * 0.5;
 let gameSpeed = 1;
 let currentGapSize = 70;
 let gameScore = 0;
@@ -386,7 +386,7 @@ const init = () => {
   gameTime = 0;
   isDay = true;
   birdAnimationStatesIterator.animationState = -1;
-  PIPE_SEPARATION = renderer.width * 1;
+  PIPE_SEPARATION = renderer.width * 0.2;
   gameSpeed = 1;
   currentGapSize = 70;
   gameScore = 0;
@@ -422,7 +422,7 @@ const init = () => {
 
   // Adds a pipe
   const pipeContainer = generatePipeContainer(OPEN_SPACE_HEIGHT / 2);
-  pipeContainer.x = renderer.width;
+  pipeContainer.x = renderer.width * 0.5;
   pipes.push(pipeContainer);
   stage.addChild(pipeContainer);
 
