@@ -7,7 +7,7 @@ const Sprite = PIXI.Sprite;
 
 // Avaliable everywhere
 const renderer = PIXI.autoDetectRenderer(
-  144, 256,
+  144, 240,
   { resolution: 4, antialias: true },
 );
 renderer.autoResize = true;
@@ -19,6 +19,8 @@ let state;
 let gameTime;
 let isDay;
 
+const sound = PIXI.sound.Sound.from('public/images/fart.wav');
+
 // Sprites
 let background;
 let darkBackground;
@@ -29,31 +31,20 @@ let pipes;
 
 const birdAnimationStates = [
   'face1.png',
-  //'yellow-bird-1.png',
-  'yellow-bird-2.png',
-  'yellow-bird-3.png',
-  'yellow-bird-2.png',
+  'face2.png'
 ];
-/*
 const birdAnimationStatesIterator = {
   animationState: -1,
   [Symbol.iterator]() { return this; },
 
   next() {
-    if (this.animationState > 2) {
-      this.animationState = 0;
-    } else {
-      this.animationState += 1;
-    }
-
     if (bird.vy >= 2.5) {
-      this.animationState = 1;
+      return { value: birdAnimationStates[1], done: false };
+    } else {
+      return { value: birdAnimationStates[0], done: false };
     }
-
-    return { value: birdAnimationStates[this.animationState], done: false };
   },
 };
-*/
 // Constants
 const OPEN_SPACE_HEIGHT = 201;
 const MAX_ROTATION = Math.PI / 2 - 0.2;
@@ -95,6 +86,7 @@ const gameLoop = () => {
 
 const flyClickHandler = () => {
   bird.vy = -2.75;
+  sound.play();
 };
 
 const flySpaceHandler = (event) => {
@@ -122,12 +114,12 @@ const generatePipeContainer = (center) => {
 
 const generatePipes = () => {
   // Abort if a pipe has not left the screen
-  if (pipes[0].x < -(id['down-green-pipe.png'].texture.width)) {
+  if (!pipes[0] && pipes[0].x < -(id['down-green-pipe.png'].texture.width)) {
     pipes.splice(0, 1);
     return;
   }
 
-  const stopGeneratingAt = renderer.width * 2;
+  const stopGeneratingAt = renderer.width / 2.0;
   const centerPoint = Math.random() * ((OPEN_SPACE_HEIGHT - currentGapSize) - (currentGapSize)) + currentGapSize;
   let currentPosition = pipes.slice(-1)[0].x + PIPE_SEPARATION;
 
@@ -152,7 +144,7 @@ const animatePipes = (speed) => {
 
 const animateBirdWings = () => {
   // Make the wings flap
-  //bird.texture = id[birdAnimationStatesIterator.next().value].texture;
+  bird.texture = id[birdAnimationStatesIterator.next().value].texture;
 };
 
 const animateBirdStatic = () => {
@@ -215,7 +207,7 @@ const displayScore = (score) => {
   });
 
   // Center the scoreContainer
-  scoreContainer.x = (renderer.width / 4) - (scoreContainer.width / 2);
+  scoreContainer.x = (renderer.width / 8) - (scoreContainer.width / 4);
 };
 
 const checkCollisions = () => {
@@ -342,8 +334,8 @@ const preLost = () => {
   document.removeEventListener('keypress', flySpaceHandler);
 
   gameOver = new Sprite(id['game-over.png'].texture);
-  gameOver.x = (renderer.width / 4) - (gameOver.width / 2);
-  gameOver.y = (renderer.height / 4) - 60;
+  gameOver.x = (renderer.width / 8) - (gameOver.width / 2);
+  gameOver.y = (renderer.height / 8) - 60;
   stage.addChild(gameOver);
 
   document.addEventListener('keypress', function handler(event) {
@@ -393,7 +385,7 @@ const reset = () => {
 const init = () => {
   gameTime = 0;
   isDay = true;
-  //birdAnimationStatesIterator.animationState = -1;
+  birdAnimationStatesIterator.animationState = -1;
   PIPE_SEPARATION = renderer.width * 1;
   gameSpeed = 1;
   currentGapSize = 70;
@@ -418,10 +410,11 @@ const init = () => {
 
   // Adds bird
   bird = new Sprite(id[birdAnimationStates[0]].texture);
-  bird.scale.x = bird.scale.y = 0.05;
+  bird.width = 81 * 0.3;
+  bird.height = 61 * 0.3;
   bird.y = (OPEN_SPACE_HEIGHT / 2) - (bird.height / 2) + 10;
   bird.x = (stage.width / 2) - (40);
-  bird.pivot.set(bird.width / 2, bird.height / 2);
+  bird.pivot.set(bird.width / 2 * 3, bird.height / 2 * 3);
   // Bird physics properties
   bird.vy = 0;
   bird.ay = 0.12;
@@ -436,7 +429,7 @@ const init = () => {
   // Adds a score container + scores
   scoreContainer = new Container();
   const zeroNum = new Sprite(id['0.png'].texture);
-  scoreContainer.x = (renderer.width / 4) - ((zeroNum.width / 2) - 1);
+  scoreContainer.x = (renderer.width / 8) - ((zeroNum.width / 4) - 1);
   scoreContainer.y = OPEN_SPACE_HEIGHT / 10;
   scoreContainer.addChild(zeroNum);
   stage.addChild(scoreContainer);
@@ -468,9 +461,6 @@ loader
   .add('night-bg.png', 'public/images/night-bg.png')
   .add('up-green-pipe.png', 'public/images/up-green-pipe.png')
   .add('up-red-pipe.png', 'public/images/up-red-pipe.png')
-  .add('yellow-bird-1.png', 'public/images/yellow-bird-1.png')
-  .add('yellow-bird-2.png', 'public/images/yellow-bird-2.png')
-  .add('yellow-bird-3.png', 'public/images/yellow-bird-3.png')
   .add('face1.png', 'public/images/face1.png')
   .add('face2.png', 'public/images/face2.png')
   .load(init);
